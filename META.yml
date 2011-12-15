@@ -1,0 +1,28 @@
+--- #YAML:1.0
+name:               NIST-NVD
+version:            0.02
+abstract:           The great new NIST::NVD!
+author:
+    - C.J. Adams-Collier <cjac@f5.com>
+license:            perl
+distribution_type:  module
+configure_requires:
+    ExtUtils::MakeMaker:  0
+build_requires:
+    ExtUtils::MakeMaker:  0
+requires:
+    Data::Dumper:         0
+    DB_File:              0
+    IO::Compress::Bzip2:  0
+    Storable:             0
+    Test::More:           0
+    XML::XPath:           0
+    XML::XPath::XMLParser:  0
+no_index:
+    directory:
+        - t
+        - inc
+generated_by:       ExtUtils::MakeMaker version 6.55_02
+meta-spec:
+    url:      http://module-build.sourceforge.net/META-spec-v1.4.html
+    version:  1.4
