@@ -7,17 +7,19 @@ use Storable qw(thaw);
 use IO::Uncompress::Bunzip2 qw(bunzip2 $Bunzip2Error);
 use DB_File;
 
+use Carp;
+
 =head1 NAME
 
 NIST::NVD::Query - Query the NVD database
 
 =head1 VERSION
 
-Version 0.02
+Version 0.03
 
 =cut
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 
 =head1 SYNOPSIS
@@ -73,41 +75,43 @@ database
 =cut
 
 sub new {
-  my $class = shift();
+  my( $class, %args ) = @_;
   $class = ref $class || $class;
 
-  my %args = @_;
+  my $args = { filename => [ qw{ database idx_cpe } ],
+	       database => [ qw{ database idx_cpe } ],
+	       required => [ qw{ database idx_cpe } ],
+	     };
 
   my $fail = 0;
-  foreach my $req_arg ( qw{ database idx_cpe } ){
+  foreach my $req_arg ( @{$args->{required}} ){
     unless( $args{$req_arg} ){
-      print STDERR "'$req_arg' is a required argument to __PACKAGE__::new\n";
+      carp "'$req_arg' is a required argument to __PACKAGE__::new\n";
       $fail++;
     }
   }
-  return undef if $fail;
-
-  foreach my $filename_arg ( qw{ database idx_cpe } ){
-    unless( -f $args{$filename_arg} ){
-      print STDERR "$filename_arg file '$args{$filename_arg}' does not exist\n";
-      $fail++;
-    }
-  }
-  return undef if $fail;
+  return if $fail;
 
   my $self = {};
+  foreach my $arg ( keys %args ){
+    if( grep { $_ eq $arg } @{ $args->{filename} } ){
+      unless( -f $args{$arg} ){
+	carp "$arg file '$args{$arg}' does not exist\n";
+	$fail++;
+      }
+    }
+    if( grep { $_ eq $arg } @{ $args->{database} } ){
+      my %tied_hash;
+      $self->{$arg} = \%tied_hash;
+      $self->{"$arg.db"} = tie %tied_hash, 'DB_File', $args{$arg}, O_RDONLY;
 
-  foreach my $db_arg ( qw{ database idx_cpe } ){
-    my %tied_hash;
-    $self->{$db_arg} = \%tied_hash;
-    $self->{"$db_arg.db"} = tie %tied_hash, 'DB_File', $args{$db_arg}, O_RDONLY;
-
-    unless( $self->{"$db_arg.db"} ){
-      print STDERR "failed to open database '$args{$db_arg}': $!";
-      $fail++;
+      unless( $self->{"$arg.db"} ){
+	carp "failed to open database '$args{$arg}': $!";
+	$fail++;
+      }
     }
   }
-  return undef if $fail;
+  return if $fail;
 
   bless $self, $class;
 }
@@ -138,22 +142,21 @@ Returns a reference to an array of CVE IDs.  Example:
 =cut
 
 sub cve_for_cpe {
-  my $self = shift;
-  my %args = @_;
+  my( $self, %args ) = @_;
 
   my $frozen;
 
   my $result = $self->{'idx_cpe.db'}->get($args{cpe}, $frozen);
 
   unless( $result == 0 ){
-    print STDERR "failed to retrieve CVEs for CPE '$args{cpe}': $!\n";
-    return undef;
+    carp "failed to retrieve CVEs for CPE '$args{cpe}': $!\n";
+    return;
   }
 
   my $cve_ids = eval { thaw $frozen };
   if( @$ ){
-    print STDERR "Storable::thaw had a major malfunction.";
-    return undef;
+    carp "Storable::thaw had a major malfunction.";
+    return;
   }
 
   return $cve_ids;
@@ -161,33 +164,67 @@ sub cve_for_cpe {
 
 =head2 cve
 
+Returns a list of CVE IDs for a given CPE URN.
+
+=head3 Required argument
+
+    cve_id: CPE URN  Example:
+
+    'CVE-1999-1587'
+
+=head3 Return Value
+
+Returns a reference to a hash representing a CVE entry:
+
+  my $nvd_cve_entry =
+    {
+     'vuln:vulnerable-configuration' => [ ... ],
+     'vuln:vulnerable-software-list' => [ ... ],
+     'vuln:cve-id'                   => 'CVE-1999-1587',
+     'vuln:discovered-datetime'      => '...',
+     'vuln:published-datetime'       => '...',
+     'vuln:last-modified-datetime'   => '...',
+     'vuln:cvss'                     => {...},
+     'vuln:cwe'                      => 'CWE-ID',
+     'vuln:references'               => [ { attr => {...},
+					    'vuln:references' => [ {...}, ... ],
+					    'vuln:source'     => '...',
+					  } ],
+     'vuln:summary'                  => '...',
+     'vuln:security-protection'      => '...',
+     'vuln:assessment_check'         => { 'check0 name' => 'check0 value',
+					  ... },
+     'vuln:scanner',                 => [ { 'vuln:definition' => { 'vuln attr0 name' => 'vuln attr0 value'
+								   ... } } ],
+    };
+
 =cut
 
+
 sub cve {
-  my $self = shift;
-  my %args = @_;
+  my( $self, %args ) =  @_;
 
   my $compressed;
 
   my $result = $self->{'database.db'}->get($args{cve_id}, $compressed);
 
   unless( $result == 0 ){
-    print STDERR "failed to retrieve CVE '$args{cve_id}': $!\n";
-    return undef;
+    carp "failed to retrieve CVE '$args{cve_id}': $!\n";
+    return;
   }
 
   my $frozen;
 
   my $status = bunzip2( \$compressed, \$frozen );
   unless( $status ){
-    print STDERR "bunzip2 failed: $Bunzip2Error\n";
-    return undef;
+    carp "bunzip2 failed: $Bunzip2Error\n";
+    return;
   }
 
   my $entry = eval { thaw $frozen };
   if( @$ ){
-    print STDERR "Storable::thaw had a major malfunction.";
-    return undef;
+    carp "Storable::thaw had a major malfunction.";
+    return;
   }
 
   return $entry;
@@ -251,7 +288,7 @@ L<http://search.cpan.org/dist/NIST-NVD/>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2011 C.J. Adams-Collier.
+Copyright 2011 F5 Networks, Inc.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published
