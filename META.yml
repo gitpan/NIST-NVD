@@ -1,7 +1,7 @@
 --- #YAML:1.0
 name:               NIST-NVD
-version:            0.03
-abstract:           The great new NIST::NVD!
+version:            0.04
+abstract:           Placeholder for general NIST::NVD utilities
 author:
     - C.J. Adams-Collier <cjac@f5.com>
 license:            perl

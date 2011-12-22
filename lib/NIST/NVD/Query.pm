@@ -15,11 +15,11 @@ NIST::NVD::Query - Query the NVD database
 
 =head1 VERSION
 
-Version 0.03
+Version 0.04
 
 =cut
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 
 =head1 SYNOPSIS
@@ -143,6 +143,10 @@ Returns a reference to an array of CVE IDs.  Example:
 
 sub cve_for_cpe {
   my( $self, %args ) = @_;
+
+  unless( exists $args{cpe} ){
+    carp qq{"cpe" is a required argument to __PACKAGE__::cve_for_cpe\n};
+  }
 
   my $frozen;
 
