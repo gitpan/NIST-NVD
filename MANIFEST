@@ -4,6 +4,7 @@ Makefile.PL
 README
 lib/NIST/NVD.pm
 lib/NIST/NVD/Query.pm
+lib/NIST/NVD/Update.pm
 lib/NIST/NVD/Store/Base.pm
 lib/NIST/NVD/Store/DB_File.pm
 bin/convert-nvdcve
@@ -18,5 +19,4 @@ t/data/nvdcve-2.0-test.xml
 t/critic.t
 t/perlcriticrc
 ignore.txt
-META.yml                                 Module YAML meta-data (added by MakeMaker)
-META.json                                Module JSON meta-data (added by MakeMaker)
+META.yml                                 Module meta-data (added by MakeMaker)
