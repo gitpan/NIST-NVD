@@ -1,5 +1,6 @@
 Changes
 MANIFEST
+MANIFEST.SKIP
 Makefile.PL
 README
 lib/NIST/NVD.pm
@@ -19,4 +20,5 @@ t/data/nvdcve-2.0-test.xml
 t/critic.t
 t/perlcriticrc
 ignore.txt
+TODO
 META.yml                                 Module meta-data (added by MakeMaker)
