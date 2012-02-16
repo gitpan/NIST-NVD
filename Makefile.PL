@@ -13,6 +13,7 @@ WriteMakefile
    PL_FILES            => {},
    PREREQ_PM => {
 		 'Test::More'            => 0,
+		 'Test::File'            => 0,
 		 'Data::Dumper'          => 0,
 		 'XML::XPath'            => 0,
 		 'XML::XPath::XMLParser' => 0,
@@ -21,6 +22,6 @@ WriteMakefile
 		 'DB_File'               => 0,
 		 'Carp'                  => 0,
 		},
-   dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
+   dist                => { COMPRESS => 'bzip2 -9f', SUFFIX => 'bz2', },
    clean               => { FILES => 'NIST-NVD-* t/data/*.db' },
   );
