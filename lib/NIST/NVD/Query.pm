@@ -11,11 +11,11 @@ NIST::NVD::Query - Query the NVD database
 
 =head1 VERSION
 
-Version 0.07
+Version 0.08
 
 =cut
 
-our $VERSION = '0.07';
+our $VERSION = '0.08';
 
 
 =head1 SYNOPSIS
@@ -124,6 +124,43 @@ sub cve_for_cpe {
   return $return;
 }
 
+=head2 cwe_for_cpe
+
+Returns a list of CWE IDs for a given CPE URN.
+
+=head3 Required argument
+
+    cpe: CPE URN  Example:
+
+    'cpe:/a:zaal:tgt:1.0.6'
+
+=head3 Return Value
+
+Returns a reference to an array of CWE IDs.  Example:
+
+    $cwe_id_list = [
+      'CWE-1999-1587',
+      'CWE-1999-1588',
+    ]
+
+=head3 Example
+
+    my $cwe_id_list = $q->cwe_for_cpe( cpe => 'cpe:/a:zaal:tgt:1.0.6' );
+
+=cut
+
+sub cwe_for_cpe {
+  my( $self, %args ) = @_;
+
+  unless( exists $args{cpe} ){
+    carp qq{"cpe" is a required argument to __PACKAGE__::cwe_for_cpe\n};
+  }
+
+	my $return = $self->{store}->get_cwe_for_cpe(%args);
+
+  return $return;
+}
+
 =head2 cve
 
 Returns a list of CVE IDs for a given CPE URN.
@@ -168,6 +205,13 @@ sub cve {
 
 	return $self->{store}->get_cve((%args));
 }
+
+sub cwe {
+  my( $self, %args ) =  @_;
+
+	return $self->{store}->get_cwe((%args));
+}
+
 
 =head1 AUTHOR
 
