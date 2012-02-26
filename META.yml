@@ -3,7 +3,13 @@ abstract: 'Placeholder for general NIST::NVD utilities'
 author:
   - 'C.J. Adams-Collier <cjac@f5.com>'
 build_requires:
-  ExtUtils::MakeMaker: 0
+  Perl::Critic: 0
+  Test::File: 0
+  Test::More: 0
+  Test::Pod: 0
+  Test::Pod::Coverage: 0
+  XML::XPath: 0
+  XML::XPath::XMLParser: 0
 configure_requires:
   ExtUtils::MakeMaker: 0
 dynamic_config: 1
@@ -23,8 +29,4 @@ requires:
   Data::Dumper: 0
   IO::Compress::Bzip2: 0
   Storable: 0
-  Test::File: 0
-  Test::More: 0
-  XML::XPath: 0
-  XML::XPath::XMLParser: 0
-version: 0.08
+version: 0.09
