@@ -1,15 +1,15 @@
 ---
-abstract: 'Placeholder for general NIST::NVD utilities'
+abstract: "Fetch and convert NIST's NVD feeds"
 author:
   - 'C.J. Adams-Collier <cjac@f5.com>'
 build_requires:
-  Perl::Critic: 0
-  Test::File: 0
-  Test::More: 0
-  Test::Pod: 0
-  Test::Pod::Coverage: 0
-  XML::XPath: 0
-  XML::XPath::XMLParser: 0
+  LWP::UserAgent: 6.04
+  Perl::Critic: 1.117
+  Test::File: 1.31
+  Test::More: 0.98
+  Test::Pod: 1.44
+  Test::Pod::Coverage: 1.08
+  XML::XPath: 1.13
 configure_requires:
   ExtUtils::MakeMaker: 0
 dynamic_config: 1
@@ -24,9 +24,9 @@ no_index:
     - t
     - inc
 requires:
-  Carp: 0
-  DB_File: 0
-  Data::Dumper: 0
-  IO::Compress::Bzip2: 0
-  Storable: 0
-version: 0.09
+  Carp: 1.20
+  DB_File: 1.821
+  Data::Dumper: 2.130_02
+  IO::Compress::Bzip2: 2.033
+  Storable: 2.27
+version: 0.10
