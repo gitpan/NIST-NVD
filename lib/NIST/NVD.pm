@@ -10,11 +10,11 @@ NIST::NVD - Fetch and convert NIST's NVD feeds
 
 =head1 VERSION
 
-Version 0.10
+Version 1.00.00
 
 =cut
 
-our $VERSION = '0.10';
+our $VERSION = '1.00.00';
 
 =head1 SYNOPSIS
 
@@ -98,7 +98,6 @@ L<http://cpanratings.perl.org/d/NIST-NVD>
 L<http://search.cpan.org/dist/NIST-NVD/>
 
 =back
-
 
 =head1 ACKNOWLEDGEMENTS
 

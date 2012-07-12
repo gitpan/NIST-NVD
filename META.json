@@ -37,15 +37,9 @@
          }
       },
       "runtime" : {
-         "requires" : {
-            "Carp" : "1.20",
-            "DB_File" : "1.821",
-            "Data::Dumper" : "2.130_02",
-            "IO::Compress::Bzip2" : "2.033",
-            "Storable" : "2.27"
-         }
+         "requires" : {}
       }
    },
    "release_status" : "stable",
-   "version" : "0.10"
+   "version" : "v1.00.00"
 }

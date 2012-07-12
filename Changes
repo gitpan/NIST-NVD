@@ -1,5 +1,37 @@
 Revision history for NIST-NVD
 
+ 1.00.00 20120121T1602:23-0700 cjac@f5.com
+        - exercised in house
+				* works for me.  How about you?
+
+        - implemented features
+        * loading of nvd entries sourced from XML published by NIST
+          into DB_File database
+        * querying of nvd entries stored in database
+        * CRUD layer implemented using database agnostic API
+
+        - unimplemented features
+        * real-time CVE synchronization (need record merge tests)
+        * low hanging fruit in area of memory management love
+        * low hanging fruit in area of batch nvd entry processing
+        * CVE loading code from bin/ should be re-factored under
+          lib/NIST/NVD/
+        * NIST::NVD::Store::DB_File does not implemente cve or cwe API
+          completely - see NIST::NVD::Store::SQLite3
+
+0.14		20120522T22:31:26 -0700
+  this code has been exercised by F5 and seems to work.
+
+0.13		20120517T21:25:14 -0800
+	removed hard dep on DB_File from NIST::NVD::Query
+
+0.12		2012-05-16T0758 -0800
+  integrated work related to get_websec_by_cpe
+  removed DB_File dep
+
+0.11		2012-04-26T15:31 -0800
+  applied recommendations from Lowell
+	
 0.10		2012-03-30T10:36 -0800
   fixed some pod
   added explicit version numbers in Makefile.PL
@@ -29,14 +61,14 @@ Revision history for NIST-NVD
   that it can be over-ridden
 
 0.03    2011/12/19 @ 06:59:30
-	Applying recommendations from Hafey
-	Added some more PODs
-	got tests from t/manifest.t passing
-	MANIFEST and ignore.txt are correct
+  Applying recommendations from Hafey
+  Added some more PODs
+  got tests from t/manifest.t passing
+  MANIFEST and ignore.txt are correct
 
 0.02	2011/12/15
-	Added some PODs
-	got rid of some unnecessary complexity in cve hash ref
+  Added some PODs
+  got rid of some unnecessary complexity in cve hash ref
 
 0.01    2011/12/13
-        Initial work completed
+  Initial work completed
